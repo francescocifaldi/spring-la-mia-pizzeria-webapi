@@ -2,6 +2,7 @@ package org.lessons.java.spring_la_mia_pizzeria_webapi.controller;
 
 import org.lessons.java.spring_la_mia_pizzeria_webapi.model.Deal;
 import org.lessons.java.spring_la_mia_pizzeria_webapi.repository.DealRepository;
+import org.lessons.java.spring_la_mia_pizzeria_webapi.service.DealService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class DealController {
 
     @Autowired
-    private DealRepository dealRepository;
+    private DealService dealService;
 
     @PostMapping("/create")
     public String store(@Valid @ModelAttribute("deal") Deal newDeal,
@@ -27,13 +28,13 @@ public class DealController {
         if (bindingResult.hasErrors()) {
             return "deals/create-or-edit";
         }
-        dealRepository.save(newDeal);
+        dealService.create(newDeal);
         return "redirect:/pizzas/" + newDeal.getPizza().getId();
     }
 
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Integer id, Model model) {
-        Deal deal = dealRepository.findById(id).get();
+        Deal deal = dealService.getById(id);
         model.addAttribute("deal", deal);
         model.addAttribute("edit", true);
         return "deals/create-or-edit";
@@ -47,14 +48,14 @@ public class DealController {
             return "deals/create-or-edit";
         }
 
-        dealRepository.save(newDeal);
+        dealService.update(newDeal);
         return "redirect:/pizzas/" + newDeal.getPizza().getId();
     }
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") Integer id) {
-        Deal deal = dealRepository.findById(id).get();
-        dealRepository.delete(deal);
+        Deal deal = dealService.getById(id);
+        dealService.delete(deal);
 
         return "redirect:/pizzas/" + deal.getPizza().getId();
     }

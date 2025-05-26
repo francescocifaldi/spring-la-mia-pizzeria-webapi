@@ -3,7 +3,7 @@ package org.lessons.java.spring_la_mia_pizzeria_webapi.controller;
 import java.util.List;
 import org.lessons.java.spring_la_mia_pizzeria_webapi.model.Deal;
 import org.lessons.java.spring_la_mia_pizzeria_webapi.model.Pizza;
-import org.lessons.java.spring_la_mia_pizzeria_webapi.repository.IngredientRepository;
+import org.lessons.java.spring_la_mia_pizzeria_webapi.service.IngredientService;
 import org.lessons.java.spring_la_mia_pizzeria_webapi.service.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,7 +25,7 @@ public class PizzaController {
     private PizzaService pizzaService;
 
     @Autowired
-    private IngredientRepository ingredientRepository;
+    private IngredientService ingredientService;
 
     @GetMapping
     public String index(Model model) {
@@ -50,7 +50,7 @@ public class PizzaController {
     @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("pizza", new Pizza());
-        model.addAttribute("ingredients", ingredientRepository.findAll());
+        model.addAttribute("ingredients", ingredientService.findAll());
         return "pizzas/create-or-edit";
     }
 
@@ -61,7 +61,7 @@ public class PizzaController {
             Model model) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("ingredients", ingredientRepository.findAll());
+            model.addAttribute("ingredients", ingredientService.findAll());
             return "pizzas/create-or-edit";
         }
 
@@ -74,7 +74,7 @@ public class PizzaController {
         Pizza pizza = pizzaService.getById(id);
         model.addAttribute("pizza", pizza);
         model.addAttribute("edit", true);
-        model.addAttribute("ingredients", ingredientRepository.findAll());
+        model.addAttribute("ingredients", ingredientService.findAll());
         return "pizzas/create-or-edit";
     }
 
@@ -85,7 +85,7 @@ public class PizzaController {
             Model model) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("ingredients", ingredientRepository.findAll());
+            model.addAttribute("ingredients", ingredientService.findAll());
             return "pizzas/create-or-edit";
         }
 
