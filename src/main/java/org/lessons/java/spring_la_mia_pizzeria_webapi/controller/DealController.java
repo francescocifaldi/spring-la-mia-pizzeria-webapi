@@ -1,7 +1,6 @@
 package org.lessons.java.spring_la_mia_pizzeria_webapi.controller;
 
 import org.lessons.java.spring_la_mia_pizzeria_webapi.model.Deal;
-import org.lessons.java.spring_la_mia_pizzeria_webapi.repository.DealRepository;
 import org.lessons.java.spring_la_mia_pizzeria_webapi.service.DealService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
