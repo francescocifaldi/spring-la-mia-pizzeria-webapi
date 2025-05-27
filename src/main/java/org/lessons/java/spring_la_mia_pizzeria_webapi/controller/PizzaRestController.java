@@ -1,9 +1,13 @@
 package org.lessons.java.spring_la_mia_pizzeria_webapi.controller;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.lessons.java.spring_la_mia_pizzeria_webapi.model.Pizza;
 import org.lessons.java.spring_la_mia_pizzeria_webapi.service.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,25 +39,39 @@ public class PizzaRestController {
     }
 
     @GetMapping("/{id}")
-    public Pizza show(@PathVariable Integer id) {
-        Pizza pizza = pizzaService.getById(id);
-        return pizza;
+    public ResponseEntity<Pizza> show(@PathVariable Integer id) {
+        Optional<Pizza> pizzaAttempt = pizzaService.findById(id);
+        if (pizzaAttempt.isEmpty()) {
+            return new ResponseEntity<Pizza>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<Pizza>(pizzaAttempt.get(), HttpStatus.OK);
     }
 
     @PostMapping()
-    public Pizza create(@RequestBody Pizza pizza) {
-        return pizzaService.create(pizza);
+    public ResponseEntity<Pizza> create(@RequestBody Pizza pizza) {
+        return new ResponseEntity<Pizza>(pizzaService.create(pizza), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public Pizza update(@PathVariable Integer id, @RequestBody Pizza pizza) {
+    public ResponseEntity<Pizza> update(@PathVariable Integer id, @RequestBody Pizza pizza) {
+        Optional<Pizza> pizzaAttempt = pizzaService.findById(id);
+        if (pizzaAttempt.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         pizza.setId(id);
-        return pizzaService.update(pizza);
+        return new ResponseEntity<>(pizzaService.update(pizza), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Integer id) {
+    public ResponseEntity<Pizza> delete(@PathVariable Integer id) {
+        Optional<Pizza> pizzaAttempt = pizzaService.findById(id);
+        if (pizzaAttempt.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         pizzaService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
